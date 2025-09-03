@@ -1,0 +1,56 @@
+{
+  "name": "chatbot-api",
+  "version": "1.0.0",
+  "description": "API para chatbot de tienda de tortas con integración de Gemini AI",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
+  },
+  "keywords": [
+    "chatbot",
+    "api",
+    "gemini",
+    "tortas",
+    "express",
+    "nodejs"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "dotenv": "^16.3.1",
+    "mysql2": "^3.6.0",
+    "@google/generative-ai": "^0.2.1",
+    "joi": "^17.9.2",
+    "express-rate-limit": "^6.10.0",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.6.2",
+    "eslint": "^8.45.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iteradornet/chatbot-tortas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iteradornet/chatbot-tortas/issues"
+  },
+  "homepage": "https://github.com/iteradornet/chatbot-tortas#readme"
+}
