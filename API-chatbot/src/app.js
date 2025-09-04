@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
@@ -8,8 +7,8 @@ require('dotenv').config();
 
 // Importar middlewares
 const corsMiddleware = require('./middleware/cors');
-const errorHandler = require('./middleware/errorHandler');
-const validation = require('./middleware/validation');
+const { errorHandler } = require('./middleware/errorHandler');
+const { validateChatRequest } = require('./middleware/validation');
 
 // Importar rutas
 const indexRoutes = require('./routes/index');
@@ -34,7 +33,7 @@ app.use(corsMiddleware);
 // Rate limiting
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 5 * 60 * 1000, // 5 minutos
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // límite de requests por IP
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
   message: {
     error: 'Demasiadas peticiones desde esta IP, intenta de nuevo más tarde.',
     code: 'RATE_LIMIT_EXCEEDED'
@@ -56,8 +55,14 @@ app.use(express.urlencoded({
   limit: '10mb'
 }));
 
-// Middleware de validación global
-app.use('/api/chat', validation.validateChatRequest);
+// Middleware de validación para el chat
+app.use('/api/chat', (req, res, next) => {
+  // Solo aplicar validación a rutas POST
+  if (req.method === 'POST') {
+    return validateChatRequest(req, res, next);
+  }
+  next();
+});
 
 // Rutas principales
 app.use('/api', indexRoutes);
@@ -81,6 +86,10 @@ app.use('*', (req, res) => {
     availableEndpoints: [
       'GET /health - Health check',
       'GET /api - Información de la API',
+      'GET /api/status - Estado de servicios',
+      'GET /api/config - Configuración pública',
+      'GET /api/chat/categories - Categorías disponibles',
+      'GET /api/chat/examples - Ejemplos de uso',
       'POST /api/chat - Enviar mensaje al chatbot'
     ]
   });
@@ -106,6 +115,7 @@ const server = app.listen(PORT, () => {
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`📋 Health check disponible en: http://localhost:${PORT}/health`);
   console.log(`🤖 API del chatbot disponible en: http://localhost:${PORT}/api/chat`);
+  console.log(`📖 Documentación disponible en: http://localhost:${PORT}/api`);
 });
 
 // Graceful shutdown
